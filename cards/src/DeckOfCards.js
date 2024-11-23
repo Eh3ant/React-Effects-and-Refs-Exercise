@@ -10,8 +10,8 @@ const DeckOfCards = () => {
     useEffect(() => {
         const fetchDeck = async () => {
             try {
-                const res = axios.get("https://deckofcardsapi.com/api/deck/new/shuffle/")
-                setDeckId((await res).data.deck_id)
+                const res = await axios.get("https://deckofcardsapi.com/api/deck/new/shuffle/")
+                setDeckId(res.data.deck_id)
             } catch (e) {
                 console.error("Error fetching Deck", e)
             }
