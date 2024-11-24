@@ -5,6 +5,7 @@ const DeckOfCards = () => {
     const [cards, setCards] = useState([])
     const [deckId, setDeckId] = useState(null)
     const [isShuffle, setIsShuffle] = useState(false)
+    const [remaining, setRemaining] = useState(52)
 
 
     useEffect(() => {
@@ -28,6 +29,7 @@ const DeckOfCards = () => {
             } else {
                 setCards((cards) => [...cards, ...res.data.cards])
             }
+            setRemaining(res.data.remaining);
 
         } catch (e) {
             console.error("Error drawing card:", e)
@@ -39,8 +41,9 @@ const DeckOfCards = () => {
 
         setIsShuffle(true);
         try {
-            await axios.get(`https://deckofcardsapi.com/api/deck/${deckId}/shuffle/`);
+            const res = await axios.get(`https://deckofcardsapi.com/api/deck/${deckId}/shuffle/`);
             setCards([])
+            setRemaining(res.data.remaining);
         } catch (e) {
             console.error("Error shuffling deck:", e);
         } finally {
@@ -52,7 +55,7 @@ const DeckOfCards = () => {
         <div style={{ textAlign: "center", padding: "20px" }}>
             <h1>Deck of Cards</h1>
             <div>
-                <button onClick={drawCard} disabled={!deckId || isShuffle}>
+                <button onClick={drawCard} disabled={!deckId || isShuffle || remaining === 0}>
                     Draw a Card
                 </button>
                 <button onClick={shuffleDeck} disabled={!deckId || isShuffle}>
